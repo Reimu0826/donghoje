@@ -1,7 +1,6 @@
 import streamlit as st
 import random
 
-# 질문지 세트
 quiz = [
     ["교목은?", ["느티나무", "소나무"], "느티나무"],
     ["상징 동물은?", ["동호", "토끼"], "동호"],
@@ -10,7 +9,10 @@ quiz = [
     ['우리 학교에 있는 석상은?', ['image01.png', 'image02.png'], "image01.png"]
 ]
 
-random.shuffle(quiz)
+# 섞기
+if "shuffled" not in st.session_state:
+    random.shuffle(quiz)
+    st.session_state.shuffled = True
 
 for no in quiz:
     question = no[0]
