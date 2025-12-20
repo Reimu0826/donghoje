@@ -9,30 +9,51 @@ quiz = [
     ["우리 학교에 있는 석상은?", ["image01.png", "image02.png"], "image01.png"]
 ]
 
-# 문제 섞기 (최초 1회)
+# ===== 최초 1회만 문제 + 보기 섞기 =====
 if "quiz" not in st.session_state:
     random.shuffle(quiz)
     st.session_state.quiz = quiz
 
-st.title("학교 퀴즈 (한 번에 채점)")
+    # 문제별 보기 랜덤 섞기
+    st.session_state.choices = {}
+    for i, q in enumerate(quiz):
+        shuffled = q[1][:]
+        random.shuffle(shuffled)
+        st.session_state.choices[i] = shuffled
 
-# 문제 표시 + 답 저장
+    st.session_state.submitted = False
+
+st.title("학교 퀴즈")
+
+# ===== 문제 표시 =====
 for i, no in enumerate(st.session_state.quiz):
-    question, choices, correct = no
+    question, _, correct = no
     st.write(f"{i+1}. {question}")
+
     st.radio(
         "보기 선택",
-        choices,
-        key=f"answer_{i}"
+        st.session_state.choices[i],
+        key=f"answer_{i}",
+        disabled=st.session_state.submitted
     )
 
-# 한 번에 채점
-if st.button("정답 제출"):
+# ===== 정답 제출 =====
+if st.button("정답 제출") and not st.session_state.submitted:
     score = 0
     for i, no in enumerate(st.session_state.quiz):
         correct = no[2]
-        user_answer = st.session_state.get(f"answer_{i}")
-        if user_answer == correct:
+        if st.session_state.get(f"answer_{i}") == correct:
             score += 1
 
-    st.success(f"점수: {score} / {len(st.session_state.quiz)}")
+    st.session_state.score = score
+    st.session_state.submitted = True
+
+# ===== 결과 출력 =====
+if st.session_state.submitted:
+    st.success(f"점수: {st.session_state.score} / {len(st.session_state.quiz)}")
+
+# ===== 초기화 버튼 =====
+if st.button("초기화 (다시 시작)"):
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.experimental_rerun()
