@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import uuid  # key 재생성을 위한 uuid
 
 quiz = [
     ["교목은?", ["느티나무", "소나무"], "느티나무"],
@@ -31,11 +32,12 @@ for i, no in enumerate(st.session_state["quiz"]):
     question = no[0]
     st.write(f"{i+1}. {question}")
 
+    # key에 uuid를 붙여서 항상 새로운 컴포넌트로 인식
     st.radio(
         "보기 선택",
         st.session_state["choices"][i],
-        key=f"answer_{i}",
-        index=None,  #처음 체크 없음
+        key=f"answer_{i}_{uuid.uuid4()}",
+        index=None,  # 처음 체크 없음
         disabled=st.session_state["submitted"]
     )
 
@@ -43,8 +45,10 @@ for i, no in enumerate(st.session_state["quiz"]):
 if st.button("정답 제출") and not st.session_state["submitted"]:
     score = 0
     for i, no in enumerate(st.session_state["quiz"]):
-        if st.session_state.get(f"answer_{i}") == no[2]:
-            score += 1
+        answer_key = [k for k in st.session_state.keys() if k.startswith(f"answer_{i}_")]
+        if answer_key:
+            if st.session_state[answer_key[0]] == no[2]:
+                score += 1
     st.session_state["score"] = score
     st.session_state["submitted"] = True
 
