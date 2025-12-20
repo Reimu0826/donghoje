@@ -9,7 +9,7 @@ quiz = [
     ["우리 학교에 있는 석상은?", ["image01.png", "image02.png"], "image01.png"]
 ]
 
-# ===== 안전한 초기화 =====
+# ===== 안전한 session_state 초기화 =====
 if "quiz" not in st.session_state:
     random.shuffle(quiz)
     st.session_state["quiz"] = quiz
@@ -55,4 +55,4 @@ if st.session_state["submitted"]:
 # ===== 초기화 =====
 if st.button("초기화 (다시 시작)"):
     st.session_state.clear()
-    st.experimental_rerun()
+    st.rerun()
