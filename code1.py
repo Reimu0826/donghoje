@@ -9,7 +9,7 @@ quiz = [
     ["우리 학교에 있는 석상은?", ["image01.png", "image02.png"], "image01.png"]
 ]
 
-# ===== 안전한 session_state 초기화 =====
+# 초기화: 문제 순서와 보기 순서 랜덤
 if "quiz" not in st.session_state:
     random.shuffle(quiz)
     st.session_state["quiz"] = quiz
@@ -26,7 +26,7 @@ if "submitted" not in st.session_state:
 
 st.title("학교 퀴즈")
 
-# ===== 문제 표시 =====
+# 문제와 보기 표시
 for i, no in enumerate(st.session_state["quiz"]):
     question = no[0]
     st.write(f"{i+1}. {question}")
@@ -35,24 +35,24 @@ for i, no in enumerate(st.session_state["quiz"]):
         "보기 선택",
         st.session_state["choices"][i],
         key=f"answer_{i}",
+        index=None,  # 처음 체크 없음
         disabled=st.session_state["submitted"]
     )
 
-# ===== 정답 제출 =====
+# 정답 제출
 if st.button("정답 제출") and not st.session_state["submitted"]:
     score = 0
     for i, no in enumerate(st.session_state["quiz"]):
         if st.session_state.get(f"answer_{i}") == no[2]:
             score += 1
-
     st.session_state["score"] = score
     st.session_state["submitted"] = True
 
-# ===== 결과 출력 =====
+# 결과 출력
 if st.session_state["submitted"]:
     st.success(f"점수: {st.session_state['score']} / {len(st.session_state['quiz'])}")
 
-# ===== 초기화 =====
+# 초기화
 if st.button("초기화 (다시 시작)"):
     st.session_state.clear()
     st.rerun()
