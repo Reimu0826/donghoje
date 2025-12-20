@@ -32,7 +32,7 @@ if "radio_keys" not in st.session_state:
 if "submitted" not in st.session_state:
     st.session_state["submitted"] = False
 
-st.title("학교 퀴즈")
+st.title("애교심 감별소")  # 앱 제목
 
 # 문제와 보기 표시
 for i, no in enumerate(st.session_state["quiz"]):
