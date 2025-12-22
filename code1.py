@@ -9,13 +9,17 @@ ACCESS_CODE = "1234"
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
 
-code = st.text_input("코드를 입력하세요", type="password")
-if st.button("확인"):
-    if code == ACCESS_CODE:
-        st.session_state["authorized"] = True
-        st.success("코드 확인 완료")
-    else:
-        st.error("코드가 틀렸습니다.")
+st.title("애교심 감별소")
+
+if not st.session_state["authorized"]:
+    code = st.text_input("코드를 입력하세요", type="password")
+    if st.button("확인"):
+        if code == ACCESS_CODE:
+            st.session_state["authorized"] = True
+            st.rerun()
+        else:
+            st.error("코드가 틀렸습니다.")
+    st.stop()
 
 
 quiz = [
@@ -41,13 +45,13 @@ if "choices" not in st.session_state:
         st.session_state["choices"][i] = shuffled
 
 if "radio_keys" not in st.session_state:
-    st.session_state["radio_keys"] = [f"answer_{i}_{uuid.uuid4()}" for i in range(len(quiz))]
+    st.session_state["radio_keys"] = [
+        f"answer_{i}_{uuid.uuid4()}" for i in range(len(quiz))
+    ]
 
 if "submitted" not in st.session_state:
     st.session_state["submitted"] = False
 
-
-st.title("애교심 감별소")
 
 for i, no in enumerate(st.session_state["quiz"]):
     st.write(f"{i+1}. {no[0]}")
@@ -56,22 +60,19 @@ for i, no in enumerate(st.session_state["quiz"]):
         st.session_state["choices"][i],
         key=st.session_state["radio_keys"][i],
         index=None,
-        disabled=(not st.session_state["authorized"]) or st.session_state["submitted"],
+        disabled=st.session_state["submitted"],
         label_visibility="collapsed"
     )
 
 
 if st.button("정답 제출") and not st.session_state["submitted"]:
-    if not st.session_state["authorized"]:
-        st.warning("코드를 먼저 입력하세요.")
-    else:
-        score = 0
-        for i, no in enumerate(st.session_state["quiz"]):
-            answer_key = st.session_state["radio_keys"][i]
-            if st.session_state.get(answer_key) == no[2]:
-                score += 1
-        st.session_state["score"] = score
-        st.session_state["submitted"] = True
+    score = 0
+    for i, no in enumerate(st.session_state["quiz"]):
+        answer_key = st.session_state["radio_keys"][i]
+        if st.session_state.get(answer_key) == no[2]:
+            score += 1
+    st.session_state["score"] = score
+    st.session_state["submitted"] = True
 
 
 if st.session_state["submitted"]:
