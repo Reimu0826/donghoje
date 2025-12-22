@@ -14,7 +14,7 @@ if "authorized" not in st.session_state:
 st.title("남일사랑!")
 
 if not st.session_state["authorized"]:
-    code = st.text_input("코드를 입력하세요(코드는 별관2층 컴퓨터실습실에서 확인가능합니다)", type="password")
+    code = st.text_input("코드를 입력하세요. (코드는 별관2층 컴퓨터실습실에서 확인 가능)", type="password")
     if st.button("확인"):
         if code == ACCESS_CODE:
             st.session_state["authorized"] = True
