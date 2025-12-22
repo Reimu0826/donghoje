@@ -6,6 +6,7 @@ import uuid
 
 ACCESS_CODE = "1234"
 IMAGE_BASE_URL = "https://raw.githubusercontent.com/Reimu0826/donghoje/main/image/"
+IMAGE_WIDTH = 350  # 이미지 크기 조절 값
 
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
@@ -27,7 +28,7 @@ quiz = [
     ["우리 학교 교목은?", ["느티나무", "소나무"], "느티나무"],
     ["우리 학교 상징 동물은?", ["동호", "토끼"], "동호"],
     ["우리 학교의 교화는?", ["동백꽃", "무궁화"], "동백꽃"],
-    ["우리 학교 교가 속 (   )에 들어갈 산은? \n 동해에 솟는 해가 지혜를 열고 (   ) 힘찬 정기 혈맥을 이어 \n 온누리 우려나갈 동호의 별들 진리의 등불 밝혀 큰 뜻 이루세",
+    ["우리 학교 교가 속 (   )에 들어갈 산은?\n동해에 솟는 해가 지혜를 열고 (   ) 힘찬 정기 혈맥을 이어\n온누리 우려나갈 동호의 별들 진리의 등불 밝혀 큰 뜻 이루세",
      ["백두산", "금정산"], "백두산"],
     ["오늘 점심 메뉴가 아닌 것은?", ["어묵말이", "떡갈비", "치밥"], "떡갈비"],
     ["우리 학교 정문은 어느 쪽?", ["1-1.png", "1-2.png"], "1-1.png"],
@@ -57,13 +58,13 @@ if "submitted" not in st.session_state:
 
 for i, no in enumerate(st.session_state["quiz"]):
     st.text(f"{i+1}. {no[0]}")
-
     options = st.session_state["choices"][i]
 
-    # 이미지 선택지 처리
+    # 이미지 선택지
     if all(opt.lower().endswith((".png", ".jpg", ".jpeg")) for opt in options):
         display_options = {
-            f"![option]({IMAGE_BASE_URL}{opt})": opt for opt in options
+            f'<img src="{IMAGE_BASE_URL}{opt}" width="{IMAGE_WIDTH}">': opt
+            for opt in options
         }
 
         selected_display = st.radio(
@@ -76,7 +77,9 @@ for i, no in enumerate(st.session_state["quiz"]):
         )
 
         if selected_display:
-            st.session_state[st.session_state["radio_keys"][i]] = display_options[selected_display]
+            st.session_state[
+                st.session_state["radio_keys"][i]
+            ] = display_options[selected_display]
 
     else:
         st.radio(
