@@ -4,21 +4,18 @@ import streamlit as st
 import random
 import uuid
 
-# 코드 입력
 ACCESS_CODE = "1234"
 
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
 
-if not st.session_state["authorized"]:
-    code = st.text_input("코드를 입력하세요", type="password")
-    if st.button("확인"):
-        if code == ACCESS_CODE:
-            st.session_state["authorized"] = True
-            st.rerun()
-        else:
-            st.error("코드가 틀렸습니다.")
-    st.stop()
+code = st.text_input("코드를 입력하세요", type="password")
+if st.button("확인"):
+    if code == ACCESS_CODE:
+        st.session_state["authorized"] = True
+        st.success("코드 확인 완료")
+    else:
+        st.error("코드가 틀렸습니다.")
 
 
 quiz = [
@@ -59,18 +56,22 @@ for i, no in enumerate(st.session_state["quiz"]):
         st.session_state["choices"][i],
         key=st.session_state["radio_keys"][i],
         index=None,
-        disabled=st.session_state["submitted"]
+        disabled=(not st.session_state["authorized"]) or st.session_state["submitted"],
+        label_visibility="collapsed"
     )
 
 
 if st.button("정답 제출") and not st.session_state["submitted"]:
-    score = 0
-    for i, no in enumerate(st.session_state["quiz"]):
-        answer_key = st.session_state["radio_keys"][i]
-        if st.session_state.get(answer_key) == no[2]:
-            score += 1
-    st.session_state["score"] = score
-    st.session_state["submitted"] = True
+    if not st.session_state["authorized"]:
+        st.warning("코드를 먼저 입력하세요.")
+    else:
+        score = 0
+        for i, no in enumerate(st.session_state["quiz"]):
+            answer_key = st.session_state["radio_keys"][i]
+            if st.session_state.get(answer_key) == no[2]:
+                score += 1
+        st.session_state["score"] = score
+        st.session_state["submitted"] = True
 
 
 if st.session_state["submitted"]:
