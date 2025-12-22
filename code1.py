@@ -6,7 +6,7 @@ import uuid
 
 ACCESS_CODE = "1234"
 IMAGE_BASE_URL = "https://raw.githubusercontent.com/Reimu0826/donghoje/main/image/"
-IMAGE_WIDTH = 350  # 이미지 크기 조절 값
+IMAGE_WIDTH = 400
 
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
@@ -60,27 +60,24 @@ for i, no in enumerate(st.session_state["quiz"]):
     st.text(f"{i+1}. {no[0]}")
     options = st.session_state["choices"][i]
 
-    # 이미지 선택지
+    # 이미지 문제
     if all(opt.lower().endswith((".png", ".jpg", ".jpeg")) for opt in options):
-        display_options = {
-            f'<img src="{IMAGE_BASE_URL}{opt}" width="{IMAGE_WIDTH}">': opt
-            for opt in options
-        }
-
-        selected_display = st.radio(
+        selected = st.radio(
             "",
-            list(display_options.keys()),
+            options,
             key=st.session_state["radio_keys"][i],
             index=None,
             disabled=st.session_state["submitted"],
             label_visibility="collapsed"
         )
 
-        if selected_display:
-            st.session_state[
-                st.session_state["radio_keys"][i]
-            ] = display_options[selected_display]
+        for opt in options:
+            st.image(
+                IMAGE_BASE_URL + opt,
+                width=IMAGE_WIDTH
+            )
 
+    # 텍스트 문제
     else:
         st.radio(
             "",
