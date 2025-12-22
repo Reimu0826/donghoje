@@ -11,7 +11,7 @@ IMAGE_WIDTH = 300
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
 
-st.title("애교심 감별소")
+st.title("남일사랑!")
 
 if not st.session_state["authorized"]:
     code = st.text_input("코드를 입력하세요", type="password")
