@@ -62,19 +62,29 @@ for i, no in enumerate(st.session_state["quiz"]):
 
     # 이미지 문제
     if all(opt.lower().endswith((".png", ".jpg", ".jpeg")) for opt in options):
-        selected = st.radio(
+        label_map = {
+            f"{idx+1}번 사진": opt
+            for idx, opt in enumerate(options)
+        }
+
+        selected_label = st.radio(
             "",
-            options,
+            list(label_map.keys()),
             key=st.session_state["radio_keys"][i],
             index=None,
             disabled=st.session_state["submitted"],
             label_visibility="collapsed"
         )
 
-        for opt in options:
+        if selected_label:
+            st.session_state[
+                st.session_state["radio_keys"][i]
+            ] = label_map[selected_label]
+
+        for idx, opt in enumerate(options):
             col_radio, col_image = st.columns([1, 4])
             with col_radio:
-                st.write("")
+                st.write(f"{idx+1}번")
 
             with col_image:
                 st.image(
