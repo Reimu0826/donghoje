@@ -6,7 +6,7 @@ import uuid
 
 ACCESS_CODE = "1234"
 IMAGE_BASE_URL = "https://raw.githubusercontent.com/Reimu0826/donghoje/main/image/"
-IMAGE_WIDTH = 400
+IMAGE_WIDTH = 300
 
 if "authorized" not in st.session_state:
     st.session_state["authorized"] = False
@@ -72,10 +72,15 @@ for i, no in enumerate(st.session_state["quiz"]):
         )
 
         for opt in options:
-            st.image(
-                IMAGE_BASE_URL + opt,
-                width=IMAGE_WIDTH
-            )
+            col_radio, col_image = st.columns([1, 4])
+            with col_radio:
+                st.write("")
+
+            with col_image:
+                st.image(
+                    IMAGE_BASE_URL + opt,
+                    width=IMAGE_WIDTH
+                )
 
     # 텍스트 문제
     else:
