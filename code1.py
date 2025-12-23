@@ -4,6 +4,12 @@ import streamlit as st
 import random
 import uuid
 
+# 브라우저 제목 변경
+st.set_page_config(
+    page_title="남일 사랑 Test",
+    page_icon="mark.png"
+)
+
 ACCESS_CODE = "1234"
 IMAGE_BASE_URL = "https://raw.githubusercontent.com/Reimu0826/donghoje/main/image/"
 IMAGE_WIDTH = 300
