@@ -4,7 +4,6 @@ import streamlit as st
 import random
 import uuid
 
-# 브라우저 제목 변경
 st.set_page_config(
     page_title="남일 사랑 Test",
     page_icon="mark.png"
@@ -113,7 +112,7 @@ for i, no in enumerate(st.session_state["quiz"]):
 
 
 if st.button("정답 제출") and not st.session_state["submitted"]:
-    correct_count = 0
+    all_correct = True
 
     for i, no in enumerate(st.session_state["quiz"]):
         answer_key = st.session_state["radio_keys"][i]
@@ -122,16 +121,17 @@ if st.button("정답 제출") and not st.session_state["submitted"]:
         if i in image_label_maps and user_answer:
             user_answer = image_label_maps[i][user_answer]
 
-        if user_answer == no[2]:
-            correct_count += 1
+        if user_answer != no[2]:
+            all_correct = False
+            break
 
-    st.session_state["all_correct"] = (correct_count == len(st.session_state["quiz"]))
+    st.session_state["all_correct"] = all_correct
     st.session_state["submitted"] = True
 
 
 if st.session_state["submitted"]:
-    if st.session_state.get("all_correct"):
-        st.success("🎉 축하합니다, 별관2층 컴퓨터실습실에서 상품을 받아가세요!")
+    if st.session_state["all_correct"]:
+        st.success("축하합니다, 별관2층 컴퓨터실습실에서 상품을 받아가세요!")
     else:
         st.warning("아쉽네요, 우리 학교에 대해 더 알아봅시다!")
 
