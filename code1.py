@@ -113,6 +113,7 @@ for i, no in enumerate(st.session_state["quiz"]):
 
 if st.button("정답 제출") and not st.session_state["submitted"]:
     all_correct = True
+    correct_count = 0   # ★ 추가
 
     for i, no in enumerate(st.session_state["quiz"]):
         answer_key = st.session_state["radio_keys"][i]
@@ -121,11 +122,13 @@ if st.button("정답 제출") and not st.session_state["submitted"]:
         if i in image_label_maps and user_answer:
             user_answer = image_label_maps[i][user_answer]
 
-        if user_answer != no[2]:
+        if user_answer == no[2]:
+            correct_count += 1   # ★ 추가
+        else:
             all_correct = False
-            break
 
     st.session_state["all_correct"] = all_correct
+    st.session_state["correct_count"] = correct_count   # ★ 추가
     st.session_state["submitted"] = True
 
 
@@ -134,6 +137,11 @@ if st.session_state["submitted"]:
         st.success("축하합니다, 별관2층 컴퓨터실습실에서 상품을 받아가세요!")
     else:
         st.warning("아쉽네요, 우리 학교에 대해 더 알아봅시다!")
+
+    # ★ 추가: 정답 개수 출력
+    st.info(
+        f"정답 개수: {st.session_state['correct_count']} / {len(st.session_state['quiz'])}"
+    )
 
 
 if st.session_state["submitted"]:
