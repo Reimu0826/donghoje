@@ -9,7 +9,7 @@ st.set_page_config(
     page_icon="mark.png"
 )
 
-ACCESS_CODE = "2502"
+ACCESS_CODE = "0000"
 IMAGE_BASE_URL = "https://raw.githubusercontent.com/Reimu0826/donghoje/main/image/"
 IMAGE_WIDTH = 300
 
